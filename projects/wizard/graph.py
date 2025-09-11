@@ -38,6 +38,16 @@ def single_search(query:str):
     results = tavily_client.search(query,
                                    max_results=1,
                                    include_raw_content=False)
+    url = results['results'][0]['url']
+    url_extraction = tavily_client.extract(url)
+    
+    if len(url_extraction['results']) > 0:
+        raw_content = url_extraction["results"][0]["raw_content"]
+        prompt = resume_search.format(user_input=user_input, search_result=raw_content)
+        llm_result = llm.invoke({prompt})
+        query_results = QueryResult(
+            title = title=results
+        )
 
 
 
